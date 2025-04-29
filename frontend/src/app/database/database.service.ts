@@ -14,7 +14,7 @@ export class DatabaseService {
 
  getAllProducts(): Observable<Product[]> {
   return this.http
-    .get<{ results: Product[] }>('http://127.0.0.1:8000/api/products/')
+    .get<{ results: Product[] }>('/api/products/')
     .pipe(map(response => response.results));
 }
 }
