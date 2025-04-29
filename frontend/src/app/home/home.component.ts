@@ -1,0 +1,29 @@
+import { Component, OnInit } from '@angular/core';
+import { DatabaseService } from "../database/database.service";
+
+@Component({
+  selector: 'app-home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.css']
+})
+export class HomeComponent implements OnInit {
+
+  constructor(private databaseService: DatabaseService) { }
+
+  ngOnInit(): void {
+    this.getAllProducts();
+  }
+
+  getAllProducts() {
+    this.databaseService.getAllProducts().subscribe({
+        next: (data) => {
+          console.log(data);
+        },
+        error: (error) => {
+          console.log(error);
+        }
+      }
+    )
+  }
+
+}
