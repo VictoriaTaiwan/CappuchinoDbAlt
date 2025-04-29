@@ -1,8 +1,35 @@
 <div class="home-content">
-    <h1>Cappuchino Database</h1>
-    <p>Products and recipes.</p>
-    
-    <div class="buttons">
-      <button mat-button color="accent">Example</button>
-    </div>
-  </div>
+  <h1>Cappuchino Database</h1>
+  <p>Database contains following products.</p>
+  
+  <mat-form-field>
+    <input matInput type="search" placeholder="Type in product's name" #filter (input)="filterResults(filter.value)">
+  </mat-form-field>
+
+  <table mat-table [dataSource]="filteredData" class="mat-elevation-z8">
+
+    <ng-container matColumnDef="image_src">
+      <th mat-header-cell *matHeaderCellDef> Image </th>
+      <td mat-cell *matCellDef="let product"> <img [src]="product.image_src" alt="product image" class="product-image"/> </td>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Name </th>
+      <td mat-cell *matCellDef="let product"> {{product.name}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="calories">
+      <th mat-header-cell *matHeaderCellDef> Calories per unit </th>
+      <td mat-cell *matCellDef="let product"> {{product.calories}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="unit_name">
+      <th mat-header-cell *matHeaderCellDef> Unit </th>
+      <td mat-cell *matCellDef="let product"> {{product.unit_name}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+  </table>
+</div>
