@@ -1,0 +1,6 @@
+{% extends "api/product_detail.html" %}
+
+{% block content %}
+  {{ block.super }}
+  <p><strong>Instructions:</strong> {{ recipe.instructions }}</p>
+{% endblock %}

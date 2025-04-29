@@ -1,0 +1,13 @@
+{% extends "base_template.html" %}
+
+{% block content %}
+  <h1>{{ product.name }}</h1>
+
+  <img class = "food-icon"
+  src="{{ product.image_src }}"
+  alt="Image"
+  onerror="this.onerror=null;this.src='/static/images/placeholder.jpg';">
+  
+  <p><strong>Calories:</strong> {{ product.calories }}</p>
+  <p><strong>Unit name:</strong> {{ product.unit_name }}</p>
+{% endblock %}
