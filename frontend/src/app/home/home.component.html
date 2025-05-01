@@ -1,8 +1,8 @@
 <div class="home-content">
-  <h1>Cappuchino Database</h1>
-  <p>Database contains following products.</p>
+  <h1>Cappuchino products</h1>
   
-  <mat-form-field>
+  <mat-form-field class="product-search" >
+    <mat-icon matPrefix>search</mat-icon>
     <input matInput type="search" placeholder="Type in product's name" #filter (input)="filterResults(filter.value)">
   </mat-form-field>
 

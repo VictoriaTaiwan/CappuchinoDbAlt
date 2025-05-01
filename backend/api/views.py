@@ -8,6 +8,7 @@ class ProductViewSet(viewsets.ModelViewSet):
 	queryset = Product.objects.all()
 	serializer_class = ProductSerializer 
 	renderer_classes = [JSONRenderer]
+
 class RecipeViewSet(viewsets.ModelViewSet):
 	queryset = Recipe.objects.all()
 	serializer_class = RecipeSerializer  
