@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable, map } from "rxjs";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 
-import { Product } from "./database";
+import { Product } from "../../models/database";
 
 
 @Injectable({
@@ -14,7 +14,7 @@ export class DatabaseService {
 
  getAllProducts(): Observable<Product[]> {
   return this.http
-    .get<{ results: Product[] }>('/api/products/')
+    .get<{ results: Product[] }>('/api/public-products/')
     .pipe(map(response => response.results));
 }
 }
