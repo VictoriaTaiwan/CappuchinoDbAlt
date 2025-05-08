@@ -32,9 +32,9 @@ export class RegistrationComponent {
 
   onSubmit() {
     if (this.registerForm.valid) {
-      this.http.post('http://127.0.0.1:8000/api/register/', this.registerForm.value).subscribe({
+      this.http.post('/api/register/', this.registerForm.value).subscribe({
         next: (res) => {
-          this.router.navigate(['/login']);
+          this.router.navigate(['/dashboard']);
           this.registerForm.reset();
         },
         error: (err) => {

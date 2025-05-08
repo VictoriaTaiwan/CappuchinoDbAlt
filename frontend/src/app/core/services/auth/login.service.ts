@@ -1,43 +1,67 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
+
 
 @Injectable({
   providedIn: 'root',
 })
 export class LoginService {
-  private apiUrl = 'http://127.0.0.1:8000/api/token/'; 
-  private isLoggedInSubject = new BehaviorSubject<boolean>(false);
-  public isLoggedIn$ = this.isLoggedInSubject.asObservable();
+  private tokenUrl = '/api/token/';
+  private refreshTokenUrl = '/api/token/refresh/';
+  private TOKEN_KEY = 'access_token';
 
   constructor(private http: HttpClient, private router: Router) {}
 
   login(username: string, password: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}`, { username, password }).pipe(
-      map((response) => {
-        if (response && response.token) {
-          localStorage.setItem('jwt', response.token);
-          this.isLoggedInSubject.next(true);
-          this.router.navigate(['/dashboard']);
-        }
-        return response;
+    return this.http.post<{access: string}>(
+      `${this.tokenUrl}`, { username, password }, { withCredentials: true }
+    ).pipe(
+      tap(response => {
+        console.log(response)
+        localStorage.setItem(this.TOKEN_KEY, response.access);
+        this.router.navigate(['/dashboard']);
       }),
-      catchError((error) => {
-        console.error('Login failed', error);
+      catchError(error => {
         throw error;
       })
     );
   }
 
   logout(): void {
-    localStorage.removeItem('jwt');
-    this.isLoggedInSubject.next(false);
-    this.router.navigate(['/login']); // Redirect to login page
+    const token = localStorage.getItem(this.TOKEN_KEY);
+    this.http.post('/api/logout/', {}, {       
+      headers: {
+      Authorization: `Bearer ${token}`
+    }, 
+    withCredentials: true 
+  }).subscribe(() => {
+      localStorage.removeItem(this.TOKEN_KEY);
+      this.router.navigate(['/login']);
+    });
   }
 
-  isLoggedIn(): boolean {
-    return !!localStorage.getItem('jwt');
+  refreshAccessToken(): Observable<any> {
+    const token = localStorage.getItem(this.TOKEN_KEY);
+    return this.http.post<{access: string}>(
+      this.refreshTokenUrl, {}, { 
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        withCredentials: true 
+      }
+    ).pipe(
+      tap((response) => {
+        localStorage.setItem(this.TOKEN_KEY, response.access)
+        console.log('Access token refreshed')
+      }),
+      catchError((error) => {
+        console.error('Token refresh failed', error);
+        this.logout();
+        throw error;
+      })
+    );
   }
 }
