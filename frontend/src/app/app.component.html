@@ -1,5 +1,10 @@
 <mat-toolbar color="primary">
   <span>Cappuchino Database</span>
+  <span class="spacer"></span>
+  <button mat-button routerLink="/">Home</button>
+  <button mat-button routerLink="/login" *ngIf="!isLoggedIn">Log In</button>
+  <button mat-button routerLink="/register" *ngIf="!isLoggedIn">Register</button>
+  <button mat-button routerLink="/dashboard" *ngIf="isLoggedIn">Profile</button>
 </mat-toolbar>
 
 <router-outlet></router-outlet>

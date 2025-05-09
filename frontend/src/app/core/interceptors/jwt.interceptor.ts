@@ -13,6 +13,7 @@ export class JwtInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       catchError(err => {
         if (err.status === 401) {
+          console.log('Refreshing access token');
           return this.auth.refreshAccessToken().pipe(
             switchMap(() => {
               const retryReq = request.clone({ withCredentials: true });

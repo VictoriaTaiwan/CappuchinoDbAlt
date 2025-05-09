@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, EMPTY, Observable } from 'rxjs';
 import { Router } from '@angular/router';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, finalize, tap } from 'rxjs/operators';
 
 
 @Injectable({
@@ -11,9 +11,17 @@ import { catchError, tap } from 'rxjs/operators';
 export class LoginService {
   private tokenUrl = '/api/token/';
   private refreshTokenUrl = '/api/token/refresh/';
+  private logOutUrl = '/api/logout/';
   private TOKEN_KEY = 'access_token';
 
+  private readonly _isLoggedIn = new BehaviorSubject<boolean>(this.hasToken());
+  isLoggedIn$ = this._isLoggedIn.asObservable();
+
   constructor(private http: HttpClient, private router: Router) {}
+
+  private hasToken(): boolean {
+    return !!localStorage.getItem(this.TOKEN_KEY);
+  }
 
   login(username: string, password: string): Observable<any> {
     return this.http.post<{access: string}>(
@@ -22,31 +30,39 @@ export class LoginService {
       tap(response => {
         console.log(response)
         localStorage.setItem(this.TOKEN_KEY, response.access);
+        this._isLoggedIn.next(true);
         this.router.navigate(['/dashboard']);
       }),
       catchError(error => {
+        this._isLoggedIn.next(false);
         throw error;
       })
     );
   }
 
   logout(): void {
-    const token = localStorage.getItem(this.TOKEN_KEY);
-    this.http.post('/api/logout/', {}, {       
-      headers: {
-      Authorization: `Bearer ${token}`
-    }, 
-    withCredentials: true 
-  }).subscribe(() => {
-      localStorage.removeItem(this.TOKEN_KEY);
-      this.router.navigate(['/login']);
-    });
+    this.http.post(`${this.logOutUrl}`, {}, { withCredentials: true })
+      .pipe(
+        tap(() => {
+          console.log('Logout request succeeded.');
+        }),
+        catchError((error) => {
+          console.error('Logout request failed:', error);
+          return EMPTY;
+        }),
+        finalize(() => {
+          this._isLoggedIn.next(false);
+          localStorage.removeItem(this.TOKEN_KEY);
+          this.router.navigate(['/login']);
+        })
+      )
+      .subscribe();
   }
 
   refreshAccessToken(): Observable<any> {
     const token = localStorage.getItem(this.TOKEN_KEY);
     return this.http.post<{access: string}>(
-      this.refreshTokenUrl, {}, { 
+      `${this.refreshTokenUrl}`, {}, { 
         headers: {
           Authorization: `Bearer ${token}`
         },

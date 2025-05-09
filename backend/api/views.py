@@ -4,6 +4,7 @@ from .api_permission import ApiPermission
 from django.contrib.auth.models import User
 
 from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import viewsets, generics
 from rest_framework.renderers import JSONRenderer
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -53,9 +54,6 @@ class CookieTokenObtainPairView(TokenObtainPairView):
 
 class CookieTokenRefreshView(TokenRefreshView):
     def post(self, request, *args, **kwargs):
-        from rest_framework_simplejwt.tokens import RefreshToken
-        from rest_framework.response import Response
-
         refresh = request.COOKIES.get('refresh_token')
         if not refresh:
             return Response({'detail': 'No refresh token'}, status=401)
@@ -68,6 +66,7 @@ class CookieTokenRefreshView(TokenRefreshView):
             return Response({'detail': 'Invalid refresh token'}, status=401)
 
 class LogoutView(APIView):
+    permission_classes = [AllowAny]
     def post(self, request, *args, **kwargs):
         response = Response({'detail': 'Successfully logged out'})
         response.delete_cookie('refresh_token')
