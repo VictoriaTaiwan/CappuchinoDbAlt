@@ -1,0 +1,23 @@
+.dashboard {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    padding: 20px;
+}
+
+.profile-card {
+    width: 400px;
+    text-align: center;
+}
+
+.profile-avatar {
+    background-image: url('https://static.vecteezy.com/system/resources/thumbnails/009/734/564/small_2x/default-avatar-profile-icon-of-social-media-user-vector.jpg');
+    width: 100px !important;
+    height: 100px !important;
+    background-size: cover;
+}
+
+.card-actions {
+    display: flex;
+    justify-content: center;
+}

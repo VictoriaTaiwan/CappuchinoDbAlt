@@ -1,4 +1,15 @@
 <div class="dashboard">
-    <h1>Dashboard</h1>
-    <button (click)="logout()">Logout</button>
-  </div>
+  <h2>Dashboard</h2>
+  <mat-card class="profile-card">
+    <mat-card-header>
+      <div mat-card-avatar class="profile-avatar"></div>
+      <mat-card-title>User profile</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p>This is a mock-up of a user profile.</p>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-raised-button color="primary" (click)="logout()">Logout</button>
+    </mat-card-actions>
+  </mat-card>
+</div>
