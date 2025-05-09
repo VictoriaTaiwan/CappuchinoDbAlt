@@ -1,0 +1,37 @@
+@use '@angular/material' as mat;
+@include mat.core();
+
+$cappuchino-db-primary-palette: mat.m2-define-palette((
+  500: #cbdad5,
+  100: #e9f2f0,
+  700: #aac4bd,
+  contrast: (
+    500: #2f3e46,
+    100: #2f3e46,
+    700: #ffffff88,
+  )
+));
+
+$cappuchino-db-accent-palette: mat.m2-define-palette((
+  500: #f3e1d0,
+  100: #fff7f1,
+  700: #e1c4b1,
+  contrast: (
+    500: #2f3e46,
+    100: #2f3e46,
+    700: #2f3e46,
+  )
+));
+
+$cappuchino-db-warn-palette: mat.m2-define-palette(mat.$m2-deep-orange-palette);
+
+// Define the final theme
+$cappuchino-db-theme: mat.m2-define-light-theme((
+  color: (
+    primary: $cappuchino-db-primary-palette,
+    accent: $cappuchino-db-accent-palette,
+    warn: $cappuchino-db-warn-palette,
+  ),
+));
+
+@include mat.all-component-themes($cappuchino-db-theme);

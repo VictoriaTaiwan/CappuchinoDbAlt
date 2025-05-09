@@ -1,18 +1,18 @@
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { catchError, Observable, switchMap, tap, throwError } from "rxjs";
-import { LoginService } from "../services/auth/login.service";
+import { catchError, Observable, switchMap, throwError } from "rxjs";
+import { AuthService } from "../services/auth.service";
 
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
-  constructor(private auth: LoginService) {}
+  constructor(private auth: AuthService) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     request = request.clone({ withCredentials: true });
 
     return next.handle(request).pipe(
-      tap(()=>console.log('Interceptor working')),
       catchError(err => {
+        console.log(err);
         if (err.status === 401) {
           console.log('Refreshing access token');
           return this.auth.refreshAccessToken().pipe(

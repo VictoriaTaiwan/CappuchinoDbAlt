@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, map } from "rxjs";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 
-import { Product } from "../../models/database";
+import { Product } from "../models/database";
 
 
 @Injectable({

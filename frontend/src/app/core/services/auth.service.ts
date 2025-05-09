@@ -3,12 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, EMPTY, Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { catchError, finalize, tap } from 'rxjs/operators';
+import { FormGroup } from '@angular/forms';
 
 
 @Injectable({
   providedIn: 'root',
 })
-export class LoginService {
+export class AuthService {
   private tokenUrl = '/api/token/';
   private refreshTokenUrl = '/api/token/refresh/';
   private logOutUrl = '/api/logout/';
@@ -84,5 +85,9 @@ export class LoginService {
         throw error;
       })
     );
+  }
+
+  register(form: FormGroup): Observable<any>{
+    return this.http.post('/api/register/', form);
   }
 }

@@ -1,13 +1,16 @@
 import { Component } from '@angular/core';
 
 import { Router } from '@angular/router';
-import { LoginService } from '../../core/services/auth/login.service';
+import { AuthService } from '../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-login',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MatFormFieldModule, MatInputModule, MatButtonModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
@@ -16,10 +19,10 @@ export class LoginComponent {
   password: string = '';
   errorMessage: string = '';
 
-  constructor(private loginService: LoginService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   onLogin(): void {
-    this.loginService.login(this.username, this.password).subscribe(
+    this.authService.login(this.username, this.password).subscribe(
       () => {
         this.router.navigate(['/dashboard']);
       },

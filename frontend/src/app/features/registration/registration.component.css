@@ -1,0 +1,14 @@
+.parent{
+  display: flex;
+  justify-content: center;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  flex-direction: column;
+}
+
+.register-form {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  flex-direction: column;
+}

@@ -1,19 +1,31 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { AuthService } from '../../core/services/auth.service';
+
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-register',
-  imports:[ReactiveFormsModule, CommonModule, FormsModule,],
-  templateUrl: './registration.component.html'
+  imports:[
+    ReactiveFormsModule, 
+    CommonModule, 
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+  ],
+  templateUrl: './registration.component.html',
+  styleUrls: ['./registration.component.css']
 })
 export class RegistrationComponent {
   registerForm: FormGroup;
   errorMessage: string | null = null;
 
-  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router) {
+  constructor(private fb: FormBuilder, private authService:AuthService, private router: Router) {
     this.registerForm = this.fb.group({
       username: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -31,8 +43,10 @@ export class RegistrationComponent {
   }
 
   onSubmit() {
-    if (this.registerForm.valid) {
-      this.http.post('/api/register/', this.registerForm.value).subscribe({
+    if (this.registerForm.invalid) {
+      return;
+    }
+    this.authService.register(this.registerForm.value).subscribe({
         next: (res) => {
           this.router.navigate(['/login']);
           this.registerForm.reset();
@@ -49,7 +63,6 @@ export class RegistrationComponent {
             this.errorMessage = 'Registration failed.';
           }
         }
-      });
-    }
+    });
   }
 }

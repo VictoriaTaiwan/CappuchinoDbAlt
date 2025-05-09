@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DatabaseService } from "../../core/services/database/database.service";
+import { DatabaseService } from "../../core/services/database.service";
 import { MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input'; 

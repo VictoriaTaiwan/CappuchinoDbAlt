@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
 import { MatButtonModule } from '@angular/material/button';
-import { LoginService } from './core/services/auth/login.service';
+import { AuthService } from './core/services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -22,7 +22,7 @@ export class AppComponent {
   title = 'frontend';
   isLoggedIn: boolean = false;
   
-  constructor(private authService: LoginService, private router: Router) {
+  constructor(private authService: AuthService, private router: Router) {
     this.authService.isLoggedIn$.subscribe(isLoggedIn => {
       console.log('Logged in state:', isLoggedIn);
       this.isLoggedIn = isLoggedIn;
