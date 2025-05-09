@@ -41,8 +41,13 @@ export class LoginService {
   }
 
   logout(): void {
-    this.http.post(`${this.logOutUrl}`, {}, { withCredentials: true })
-      .pipe(
+    const token = localStorage.getItem(this.TOKEN_KEY);
+    this.http.post(`${this.logOutUrl}`, {}, {         
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      withCredentials: true 
+    }).pipe(
         tap(() => {
           console.log('Logout request succeeded.');
         }),

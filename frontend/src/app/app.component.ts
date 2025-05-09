@@ -4,8 +4,6 @@ import { CommonModule } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
 import { MatButtonModule } from '@angular/material/button';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { JwtInterceptor } from './core/interceptors/jwt.interceptor';
 import { LoginService } from './core/services/auth/login.service';
 
 @Component({
@@ -16,13 +14,6 @@ import { LoginService } from './core/services/auth/login.service';
     MatToolbarModule,  
     MatButtonModule, 
     CommonModule, 
-  ],
-  providers:[
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: JwtInterceptor,
-      multi: true
-    }
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']

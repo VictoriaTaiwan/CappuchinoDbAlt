@@ -34,7 +34,7 @@ export class RegistrationComponent {
     if (this.registerForm.valid) {
       this.http.post('/api/register/', this.registerForm.value).subscribe({
         next: (res) => {
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/login']);
           this.registerForm.reset();
         },
         error: (err) => {
