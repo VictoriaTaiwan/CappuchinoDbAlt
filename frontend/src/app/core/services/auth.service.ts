@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, EMPTY, Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { BehaviorSubject, EMPTY, Observable, throwError } from 'rxjs';
 import { Router } from '@angular/router';
-import { catchError, finalize, tap } from 'rxjs/operators';
+import { catchError, finalize, tap, timeout } from 'rxjs/operators';
 import { FormGroup } from '@angular/forms';
 
 
@@ -41,9 +41,10 @@ export class AuthService {
     );
   }
 
-  logout(): void {
+  logout(): Observable<any> {
+    console.log('Logging out.')
     const token = localStorage.getItem(this.TOKEN_KEY);
-    this.http.post(`${this.logOutUrl}`, {}, {         
+    return this.http.post(`${this.logOutUrl}`, {}, {         
       headers: {
         Authorization: `Bearer ${token}`
       },
@@ -54,15 +55,15 @@ export class AuthService {
         }),
         catchError((error) => {
           console.error('Logout request failed:', error);
-          return EMPTY;
+          throw error;
         }),
         finalize(() => {
+          console.log('Finalizing log out request.');
           this._isLoggedIn.next(false);
           localStorage.removeItem(this.TOKEN_KEY);
           this.router.navigate(['/login']);
         })
-      )
-      .subscribe();
+      );
   }
 
   refreshAccessToken(): Observable<any> {
@@ -80,8 +81,7 @@ export class AuthService {
         console.log('Access token refreshed')
       }),
       catchError((error) => {
-        console.error('Token refresh failed', error);
-        this.logout();
+        console.error('Refresh error:', error);
         throw error;
       })
     );

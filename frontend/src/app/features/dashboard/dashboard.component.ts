@@ -13,6 +13,6 @@ export class DashboardComponent {
   constructor(private loginService: AuthService) {}
   logout() {
     console.log('log out clicked');
-    this.loginService.logout();
+    this.loginService.logout().subscribe();
   }
 }

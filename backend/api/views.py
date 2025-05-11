@@ -66,7 +66,7 @@ class CookieTokenRefreshView(TokenRefreshView):
             return Response({'detail': 'Invalid refresh token'}, status=401)
 
 class LogoutView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     def post(self, request, *args, **kwargs):
         response = Response({'detail': 'Successfully logged out'})
         response.delete_cookie('refresh_token')
