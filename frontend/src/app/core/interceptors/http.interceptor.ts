@@ -10,7 +10,7 @@ export class JwtInterceptor implements HttpInterceptor {
   constructor(private auth: AuthService) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    request = request.clone({ withCredentials: true });
+    request = this.cloneRequest(request);
 
     return next.handle(request).pipe(
       tap(response=>{
@@ -24,7 +24,7 @@ export class JwtInterceptor implements HttpInterceptor {
 
           return this.auth.refreshAccessToken().pipe(
             switchMap(() => {
-              const retryReq = request.clone({ withCredentials: true });
+              const retryReq = this.cloneRequest(request);
               return next.handle(retryReq);
             }),
             catchError(refreshErr => {
@@ -42,5 +42,13 @@ export class JwtInterceptor implements HttpInterceptor {
         return throwError(() => err);
       })
     );
+  }
+
+  private cloneRequest(request:HttpRequest<any>): HttpRequest<any>{
+    const token = this.auth.getToken();
+    return request = request.clone({ 
+      headers: request.headers.set('Authorization', `Bearer ${token}`),
+      withCredentials: true 
+    });
   }
 }

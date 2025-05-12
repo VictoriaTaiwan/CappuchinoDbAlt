@@ -15,18 +15,18 @@ export class AuthService {
   private logOutUrl = '/api/logout/';
   private TOKEN_KEY = 'access_token';
 
-  private readonly _isLoggedIn = new BehaviorSubject<boolean>(this.hasToken());
+  private readonly _isLoggedIn = new BehaviorSubject<boolean>(!!this.getToken());
   isLoggedIn$ = this._isLoggedIn.asObservable();
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  private hasToken(): boolean {
-    return !!localStorage.getItem(this.TOKEN_KEY);
+  getToken(): String | null {
+    return localStorage.getItem(this.TOKEN_KEY);
   }
 
   login(username: string, password: string): Observable<any> {
     return this.http.post<{access: string}>(
-      `${this.tokenUrl}`, { username, password }, { withCredentials: true }
+      `${this.tokenUrl}`, { username, password }
     ).pipe(
       tap(response => {
         console.log(response)
@@ -43,13 +43,8 @@ export class AuthService {
 
   logout(): Observable<any> {
     console.log('Logging out.')
-    const token = localStorage.getItem(this.TOKEN_KEY);
-    return this.http.post(`${this.logOutUrl}`, {}, {         
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
-      withCredentials: true 
-    }).pipe(
+    return this.http.post(`${this.logOutUrl}`, {})
+      .pipe(
         tap(() => {
           console.log('Logout request succeeded.');
         }),
@@ -67,24 +62,17 @@ export class AuthService {
   }
 
   refreshAccessToken(): Observable<any> {
-    const token = localStorage.getItem(this.TOKEN_KEY);
-    return this.http.post<{access: string}>(
-      `${this.refreshTokenUrl}`, {}, { 
-        headers: {
-          Authorization: `Bearer ${token}`
-        },
-        withCredentials: true 
-      }
-    ).pipe(
-      tap((response) => {
-        localStorage.setItem(this.TOKEN_KEY, response.access)
-        console.log('Access token refreshed')
-      }),
-      catchError((error) => {
-        console.error('Refresh error:', error);
-        throw error;
-      })
-    );
+    return this.http.post<{access: string}>(`${this.refreshTokenUrl}`, {})
+      .pipe(
+        tap((response) => {
+          localStorage.setItem(this.TOKEN_KEY, response.access)
+          console.log('Access token refreshed')
+        }),
+        catchError((error) => {
+          console.error('Refresh error:', error);
+          throw error;
+        })
+      );
   }
 
   register(form: FormGroup): Observable<any>{
