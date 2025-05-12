@@ -1,6 +1,5 @@
 # CappuchinoDbAlt
 
-<img src="https://github.com/user-attachments/assets/87db99c2-1894-4ae6-9dab-7eecc92eeaf3">
+CappuchinoDbAlt is a web service designed to help users manage their personal recipe collections and ingredient lists. It supports secure user authentication and provides full CRUD functionality for creating, editing, viewing, and deleting recipes and ingredients. Built with Angular and Django REST Framework, the app offers a responsive user interface and structured backend API for seamless interaction and data handling.
 
-
-![image](https://github.com/user-attachments/assets/7f698a7a-ab85-451e-89ea-ef300965e6a0)
+<img src="https://github.com/user-attachments/assets/eeeea6c5-fa05-4512-9594-1e4987816e47">
